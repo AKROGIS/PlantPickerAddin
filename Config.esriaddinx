@@ -1,0 +1,29 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Plant Picker</Name>
+  <AddInID>{4601c908-784f-4346-8692-1e74bd67b9fd}</AddInID>
+  <Description>Generates a species specific layer file from the plant species observation database</Description>
+  <Version>1.0</Version>
+  <Image>Images\PlantPickerAddIn.png</Image>
+  <Author>Regan Sarwas</Author>
+  <Company>National Park Service, Alaska</Company>
+  <Date>3/29/2011</Date>
+  <Targets>
+    <Target name="Desktop" version="10.0" />
+  </Targets>
+  <AddIn language="CLR" library="PlantPickerAddIn.dll" namespace="PlantPickerAddIn">
+    <ArcMap>
+      <Commands>
+        <ComboBox id="National_Park_Service_PlantPickerAddIn_PlantSpecies" class="PlantSpecies" message="Create a species specific plant layer by selecting the common name" caption="Species:" tip="Create a species specific plant layer" category="Add-In Controls" image="Images\PlantSpecies.png" sizeString="WWWWWWWWWWWWW" rows="12" itemSizeString="WWWWWWWWWWWWWWWWW" hintText="Select a common name" showCaption="true">
+          <Help heading="Help on Create Plant Layer">Create a species specific plant layer by selecting the common name</Help>
+        </ComboBox>
+      </Commands>
+      <Toolbars>
+        <Toolbar id="NPS_Plant_Picker" caption="Plant Species Selector" showInitially="true">
+          <Items>
+            <ComboBox refID="National_Park_Service_PlantPickerAddIn_PlantSpecies" />
+          </Items>
+        </Toolbar>
+      </Toolbars>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
