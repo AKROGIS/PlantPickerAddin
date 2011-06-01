@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Windows.Forms;
 using ESRI.ArcGIS.Carto; //For ILayer
 using ESRI.ArcGIS.Display; // for ISymbol
@@ -13,7 +10,7 @@ namespace PlantPickerAddIn
     {
         public PlantSpecies()
         {
-            foreach (string plant in plants)
+            foreach (string plant in _plants)
                 Add(plant);
         }
 
@@ -23,12 +20,12 @@ namespace PlantPickerAddIn
             BuildPlantLayer(Value);
         }
 
-        private void BuildPlantLayer(string plant)
+        private static void BuildPlantLayer(string plant)
         {
-            LayerFileClass layerFile = new LayerFileClass();
+            var layerFile = new LayerFileClass();
             ILayer layer;
-            //string filename = "W:\\ARO\\GIS\\PlantDemo\\Plant.lyr";
-            string filename = "C:\\1_Projects\\PlantDemo\\Plant.lyr";
+            //const string filename = "W:\\ARO\\GIS\\PlantDemo\\Plant.lyr";
+            const string filename = @"C:\Users\resarwas\Documents\Visual Studio 2010\Projects\PlantPickerAddIn\Data_Demo\Plant.lyr";
             try
             {
                 layerFile.Open(filename);
@@ -51,19 +48,19 @@ namespace PlantPickerAddIn
             }
         }
 
-        private void RandomizeMarkerColor(ILayer layer)
+        private static void RandomizeMarkerColor(ILayer layer)
         {
-            IGeoFeatureLayer geoLayer = layer as IGeoFeatureLayer;
+            var geoLayer = layer as IGeoFeatureLayer;
             if (geoLayer == null)
                 return;
-            ISimpleRenderer renderer = geoLayer.Renderer as ISimpleRenderer;
+            var renderer = geoLayer.Renderer as ISimpleRenderer;
             if (renderer == null)
                 return;
-            IMarkerSymbol symbol = renderer.Symbol as IMarkerSymbol;
+            var symbol = renderer.Symbol as IMarkerSymbol;
             if (symbol == null)
                 return;
             IRgbColor color = new RgbColorClass();
-            Random rand = new Random();
+            var rand = new Random();
             color.Red = rand.Next(256);
             color.Blue = rand.Next(256);
             color.Green = rand.Next(256);
@@ -71,7 +68,7 @@ namespace PlantPickerAddIn
             symbol.Color = color;
         }
 
-        private string[] plants =
+        private readonly string[] _plants =
         {
             "Alaska bellheather",
             "Alaska bluegrass",
