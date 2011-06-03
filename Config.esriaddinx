@@ -13,14 +13,18 @@
   <AddIn language="CLR" library="PlantPickerAddIn.dll" namespace="PlantPickerAddIn">
     <ArcMap>
       <Commands>
-        <ComboBox id="National_Park_Service_PlantPickerAddIn_PlantSpecies" class="PlantSpecies" message="Create a species specific plant layer by selecting the common name" caption="Species:" tip="Create a species specific plant layer" category="Add-In Controls" image="Images\PlantSpecies.png" sizeString="WWWWWWWWWWWWW" rows="12" itemSizeString="WWWWWWWWWWWWWWWWW" hintText="Select a common name" showCaption="true">
+        <ComboBox id="National_Park_Service_PlantPickerAddIn_PlantSpecies" class="PlantSpecies" message="Create a species specific plant layer by selecting the common name" caption="Species:" tip="Create a species specific plant layer" category="Add-In Controls" image="Images\PlantSpecies.png" sizeString="WWWWWWWWWWWWWWWWWWWWWWWWW" rows="12" itemSizeString="WWWWWWWWWWWWWWWWWWWWWW" hintText="Select a species name" showCaption="true">
           <Help heading="Help on Create Plant Layer">Create a species specific plant layer by selecting the common name</Help>
+        </ComboBox>
+        <ComboBox id="National_Park_Service_PlantPickerAddIn_PlantRank" class="PlantRank" message="Create a layer of plant species with the selected state rank" caption="Rank:" tip="Create a rank specific plant layer" category="Add-In Controls" image="Images\PlantSpecies.png" sizeString="WWWWWWWWWW" rows="12" itemSizeString="WWWW" hintText="Select a state rank" showCaption="true">
+          <Help heading="Help on Create Plant Layer">Create a layer of plant species with the selected state rank</Help>
         </ComboBox>
       </Commands>
       <Toolbars>
         <Toolbar id="NPS_Plant_Picker" caption="Plant Species Selector" showInitially="true">
           <Items>
             <ComboBox refID="National_Park_Service_PlantPickerAddIn_PlantSpecies" />
+            <ComboBox refID="National_Park_Service_PlantPickerAddIn_PlantRank" />
           </Items>
         </Toolbar>
       </Toolbars>

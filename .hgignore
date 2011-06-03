@@ -5,3 +5,6 @@ glob:obj
 glob:PlantPickerAddIn.csproj.*
 glob:*.pdf
 glob:_ReSharper.*/
+syntax: glob
+Data/plants.gdb
+Data/Plants.mdb
