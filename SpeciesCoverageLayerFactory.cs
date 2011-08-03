@@ -6,7 +6,7 @@ using ESRI.ArcGIS.Display; // for ISymbol
 
 namespace PlantPickerAddIn
 {
-    public class PlantSpecies : ESRI.ArcGIS.Desktop.AddIns.ComboBox
+    class SpeciesCoverageLayerFactory
     {
         //private const string Directory =
         //    @"C:\Users\resarwas\Documents\Visual Studio 2010\Projects\PlantPickerAddIn\Data";
@@ -16,20 +16,27 @@ namespace PlantPickerAddIn
         private const string FgdbName = Directory + @"\plants.gdb";
         private const string PickListTableName = "taxonPicklist";
         private const string FieldName = "Taxon_txtLocalAcceptedName";
+        
+        private readonly PickList _picklist;
 
-        public PlantSpecies()
+        public SpeciesCoverageLayerFactory()
         {
-            foreach (string plant in Names)
-                Add(plant);
+            _picklist = new PickList(FgdbName, PickListTableName);
         }
 
-        protected override void OnSelChange(int cookie)
+        internal string Validate()
         {
-            base.OnSelChange(cookie);
-            BuildPlantLayer(Value);
+            string result = null;
+            //FIXME - implement
+            return result;
         }
 
-        private static void BuildPlantLayer(string plant)
+        internal IEnumerable<string> PicklistNames
+        {
+            get { return _picklist.Names; }
+        }
+
+        internal void BuildLayer(string plant)
         {
             var layerFile = new LayerFileClass();
             ILayer layer;
@@ -134,21 +141,5 @@ namespace PlantPickerAddIn
             return color;
         }
 
-        public IEnumerable<string> Names
-        {
-            get
-            {
-                if (_names == null)
-                    _names = GetNames().ToArray();
-                return _names;
-            }
-        }
-
-        private string[] _names;
-
-        static List<string> GetNames()
-        {
-            return new PickList(FgdbName, PickListTableName);
-        }
     }
 }

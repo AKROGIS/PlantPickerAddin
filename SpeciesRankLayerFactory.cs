@@ -7,7 +7,7 @@ using ESRI.ArcGIS.Geodatabase;
 
 namespace PlantPickerAddIn
 {
-    public class PlantRank : ESRI.ArcGIS.Desktop.AddIns.ComboBox
+    class SpeciesRankLayerFactory
     {
         //private const string Directory =
         //    @"C:\Users\resarwas\Documents\Visual Studio 2010\Projects\PlantPickerAddIn\Data";
@@ -17,20 +17,27 @@ namespace PlantPickerAddIn
         private const string FgdbName = Directory + @"\plants.gdb";
         private const string PickListTableName = "akhpRankPicklist";
         private const string FieldName = "Taxon_vasc_aknhp_s_rank";
+        
+        private readonly PickList _picklist;
 
-        public PlantRank()
+        public SpeciesRankLayerFactory()
         {
-            foreach (string rank in Names)
-                Add(rank);
+            _picklist = new PickList(FgdbName, PickListTableName);
         }
 
-        protected override void OnSelChange(int cookie)
+        internal string Validate()
         {
-            base.OnSelChange(cookie);
-            BuildLayer(Value);
+            string result = null;
+            //FIXME - implement
+            return result;
         }
 
-        private static void BuildLayer(string rank)
+        internal IEnumerable<string> PicklistNames
+        {
+            get { return _picklist.Names; }
+        }
+
+        internal void BuildLayer(string rank)
         {
             var layerFile = new LayerFileClass();
             ILayer layer;
@@ -41,6 +48,7 @@ namespace PlantPickerAddIn
             }
             catch (Exception ex)
             {
+                //FIXME - move exception handling and error messaging to higher level
                 MessageBox.Show("Could not load '" + LayerName + "'\n" + ex.Message, "No Layer File", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 layer = null;
             }
@@ -51,13 +59,13 @@ namespace PlantPickerAddIn
                 {
                     layer.Name = "State Rank unspecified";
                     const string definitionQuery = "\"" + FieldName + "\" = '' OR \"" + FieldName + "\" is null";
-                    ((IFeatureLayerDefinition2) layer).DefinitionExpression = definitionQuery;
+                    ((IFeatureLayerDefinition2)layer).DefinitionExpression = definitionQuery;
                 }
                 else
                 {
                     layer.Name = "State Rank " + rank;
                     string definitionQuery = "\"" + FieldName + "\" = '" + rank.Replace("'", "''") + "'";
-                    ((IFeatureLayerDefinition2) layer).DefinitionExpression = definitionQuery;
+                    ((IFeatureLayerDefinition2)layer).DefinitionExpression = definitionQuery;
                 }
                 RemoveUnusedItemsFromLegend(layer);
                 ArcMap.Document.AddLayer(layer);
@@ -74,9 +82,9 @@ namespace PlantPickerAddIn
                 return;
             //FIXME - handle multiple unique value renderers
             List<string> validValue = GetValidValues(renderer.Field[0], geoLayer);  //A valid value is one that is used at least once
-            
+
             var valuesToRemove = new List<string>();
-            for (int i = 0; i < renderer.ValueCount; i++ )
+            for (int i = 0; i < renderer.ValueCount; i++)
             {
                 string value = renderer.Value[i];
                 if (!validValue.Contains(value))
@@ -88,7 +96,7 @@ namespace PlantPickerAddIn
             }
         }
 
-        private static Dictionary<string,List<string>> GetValidValues(IUniqueValueRenderer renderer, IGeoFeatureLayer layer)
+        private static Dictionary<string, List<string>> GetValidValues(IUniqueValueRenderer renderer, IGeoFeatureLayer layer)
         {
             var results = new Dictionary<string, List<string>>();
             for (int i = 0; i < renderer.FieldCount; i++)
@@ -102,7 +110,7 @@ namespace PlantPickerAddIn
         private static List<string> GetValidValues(string fieldName, IGeoFeatureLayer layer)
         {
             var results = new Dictionary<string, int>();
-            IQueryFilter query = new QueryFilter {SubFields = fieldName};
+            IQueryFilter query = new QueryFilter { SubFields = fieldName };
             IFeatureCursor cursor = layer.Search(query, true);
             int fieldIndex = cursor.FindField(fieldName);
             IFeature feature = cursor.NextFeature();
@@ -113,23 +121,5 @@ namespace PlantPickerAddIn
             }
             return results.Keys.ToList();
         }
-
-        public IEnumerable<string> Names
-        {
-            get
-            {
-                if (_names == null)
-                    _names = GetNames().ToArray();
-                return _names;
-            }
-        }
-
-        private string[] _names;
-
-        static List<string> GetNames()
-        {
-            return new PickList(FgdbName, PickListTableName);
-        }
-
     }
 }

@@ -1,0 +1,17 @@
+Carl will maintain the database in MS Access.
+when Carl provides an updated database, do the following:
+1) open the DB in MS Access
+2) run the queries in code.sql to create the picklist tables
+3) export the database to Access 2003 format and call it Plants.mdb
+4) Run the CreatePlantFGDB.py script.  If it fails:
+     a) Check the directory path in the script
+	 b) Check for database schema changes that would effect the table to table copies 
+	 c) Check that an ArcGIS upgrade has not changed the ground rules
+	 d) The script can be recreated from the model in DENA_Plants.tbx
+	    check the input parameters in edit mode before running.
+5) The FGDB plants.gdb should now be upto date.
+6) The layer files have relative paths to plants.gdb
+7) Copy the layer files and plants.gdb to C:\Plants (or the 
+   directory path in plantRank.cs and PlantSpecies.cs)
+8) install the addin
+9) The tool is presented as a toolbar with 2 (or more) special picklists
