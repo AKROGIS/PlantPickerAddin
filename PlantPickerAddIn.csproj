@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ESRI.ArcGIS.ADF.Connection.Local, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Carto, Version=10.0.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -73,6 +76,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Config.esriaddinx</DependentUpon>
     </Compile>
+    <Compile Include="LayerUtilities.cs" />
+    <Compile Include="SpeciesLayerFactory.cs" />
     <Compile Include="SpeciesObservation.cs" />
     <Compile Include="SpeciesOccurrence.cs" />
     <Compile Include="SpeciesRank.cs" />
@@ -92,9 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\PlantPickerAddIn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AddInContent Include="Images\PlantSpeciesButton.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SpeciesCoverage.cs" />
