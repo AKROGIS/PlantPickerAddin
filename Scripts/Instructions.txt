@@ -9,9 +9,12 @@ when Carl provides an updated database, do the following:
 	 c) Check that an ArcGIS upgrade has not changed the ground rules
 	 d) The script can be recreated from the model in DENA_Plants.tbx
 	    check the input parameters in edit mode before running.
-5) The FGDB plants.gdb should now be upto date.
+5) The FGDB plants.gdb should now be up to date.
 6) The layer files have relative paths to plants.gdb
-7) Copy the layer files and plants.gdb to C:\Plants (or the 
-   directory path in plantRank.cs and PlantSpecies.cs)
-8) install the addin
-9) The tool is presented as a toolbar with 2 (or more) special picklists
+7) The unique values symbology list in Plant Species by State Rank.lyr should be
+   update to by using 'Add All Values' to capture any changes to the
+   locally accepted name (Taxon_txtLocalAcceptedName). 
+8) Copy the layer files and plants.gdb to C:\Plants (or the 
+   directory path in SpeciesLayerFactory.cs)
+9) install the addin
+10) The tool is presented as a toolbar with several special picklists
