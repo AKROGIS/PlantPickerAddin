@@ -5,13 +5,18 @@ namespace PlantPickerAddIn
 {
     public class SpeciesOccurrence : ESRI.ArcGIS.Desktop.AddIns.ComboBox
     {
-        private readonly SpeciesOccurrenceLayerFactory _layerBuilder;
+        private readonly SpeciesLayerFactory _layerBuilder;
 
         public SpeciesOccurrence()
         {
             try
             {
-                _layerBuilder = new SpeciesOccurrenceLayerFactory();
+                _layerBuilder = new SpeciesLayerFactory
+                                    {
+                                        LayerFileName = "Plant Occurrence by Species.lyr",
+                                        LayerNameFormat = "All occurrences of {0}",
+                                        LayerFixer = LayerUtilities.RandomizeMarkerColor,
+                                    };
                 string msg = _layerBuilder.Validate();
                 if (string.IsNullOrEmpty(msg))
                 {

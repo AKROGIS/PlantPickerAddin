@@ -83,10 +83,6 @@
     <Compile Include="SpeciesRank.cs" />
     <Compile Include="PickList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpeciesRankLayerFactory.cs" />
-    <Compile Include="SpeciesCoverageLayerFactory.cs" />
-    <Compile Include="SpeciesObservationLayerFactory.cs" />
-    <Compile Include="SpeciesOccurrenceLayerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">

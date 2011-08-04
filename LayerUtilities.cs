@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ESRI.ArcGIS.Carto;       //For ILayer
 using ESRI.ArcGIS.Display;     //For IMarkerSymbol and IRgbColor
 using ESRI.ArcGIS.Geodatabase; //For IFeature, IFeatureCursor, and IQueryFilter
+using ESRI.ArcGIS.ADF;         //for ComReleaser, requires ESRI.ArcGIS.ADF.Connection.Local.dll
 
 
 namespace PlantPickerAddIn
@@ -90,7 +90,6 @@ namespace PlantPickerAddIn
         private static void RandomizeMarkerColor(IBivariateRenderer renderer)
         {
             RandomizeMarkerColor(renderer.MainRenderer as IUniqueValueRenderer);
-            //RandomizeMarkerColor(renderer.VariationRenderer as IClassBreaksRenderer);
             renderer.CreateLegend();
         }
 
@@ -105,7 +104,7 @@ namespace PlantPickerAddIn
             return color;
         }
 
-        internal static void RemoveUnusedItemsFromLegend(ILayer layer)
+        internal static void RemoveUnusedItemsFromUniqueValueRenderer(ILayer layer)
         {
             var geoLayer = layer as IGeoFeatureLayer;
             if (geoLayer == null)
@@ -113,14 +112,18 @@ namespace PlantPickerAddIn
             var renderer = geoLayer.Renderer as IUniqueValueRenderer;
             if (renderer == null)
                 return;
-            //FIXME - handle multiple unique value renderers
-            List<string> validValue = GetValidValues(renderer.Field[0], geoLayer);  //A valid value is one that is used at least once
+
+            //I need to create a unique list of all values in the field
+            //I will check every value in the renderer to see if it is in the valid values list
+            //I use Dictionary because it enforces uniqueness and is O(1) for contains, while List is O(n).
+
+            Dictionary<string, int> validValues = GetAllValues(renderer.Field[0], geoLayer);
 
             var valuesToRemove = new List<string>();
             for (int i = 0; i < renderer.ValueCount; i++)
             {
                 string value = renderer.Value[i];
-                if (!validValue.Contains(value))
+                if (!validValues.ContainsKey(value))
                     valuesToRemove.Add(value);
             }
             foreach (var unused in valuesToRemove)
@@ -129,30 +132,22 @@ namespace PlantPickerAddIn
             }
         }
 
-        private static Dictionary<string, List<string>> GetValidValues(IUniqueValueRenderer renderer, IGeoFeatureLayer layer)
-        {
-            var results = new Dictionary<string, List<string>>();
-            for (int i = 0; i < renderer.FieldCount; i++)
-            {
-                string fieldName = renderer.Field[i];
-                results[fieldName] = GetValidValues(fieldName, layer);
-            }
-            return results;
-        }
-
-        private static List<string> GetValidValues(string fieldName, IGeoFeatureLayer layer)
+        private static Dictionary<string, int> GetAllValues(string fieldName, IGeoFeatureLayer layer)
         {
             var results = new Dictionary<string, int>();
             IQueryFilter query = new QueryFilter { SubFields = fieldName };
-            IFeatureCursor cursor = layer.Search(query, true);
-            int fieldIndex = cursor.FindField(fieldName);
-            IFeature feature = cursor.NextFeature();
-            while (feature != null)
+            using (var comReleaser = new ComReleaser())
             {
-                results[feature.Value[fieldIndex].ToString()] = 1;
-                feature = cursor.NextFeature();
+                IFeatureCursor cursor = layer.Search(query, true);
+                comReleaser.ManageLifetime(cursor);
+                IFeature feature;
+                int fieldIndex = cursor.FindField(fieldName);
+                while ((feature = cursor.NextFeature()) != null)
+                {
+                    results[feature.Value[fieldIndex].ToString()] = 1;
+                }
             }
-            return results.Keys.ToList();
+            return results;
         }
     }
 }

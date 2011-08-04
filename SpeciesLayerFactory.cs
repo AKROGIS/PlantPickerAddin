@@ -7,20 +7,35 @@ namespace PlantPickerAddIn
 {
     class SpeciesLayerFactory
     {
-        protected const string Directory = @"C:\Plants";
-        //protected const string Directory = @"X:\get_path_from_john";
-        private const string FgdbName = Directory + @"\plants.gdb";
-        protected string LayerFileName;
-        protected string PickListTableName = "taxonPicklist";
-        //FieldName must be the featureclass field name (not layer alias), due to definition query restrictions
-        protected string FieldName = "Taxon_txtLocalAcceptedName";
-        protected string LayerNameFormat = "All occurrences of {0}";
-        
         private PickList _picklist;
         private ILayer _layer;
 
-        //Make this protected, so it can't be created directly, only by subclasses
-        protected SpeciesLayerFactory() {}
+        public SpeciesLayerFactory()
+        {
+            Directory = @"C:\Plants";
+            //Directory = @"X:\get_path_from_john";
+            FgdbName = Directory + @"\plants.gdb";
+            PickListTableName = "taxonPicklist";
+            //FieldName must be the featureclass field name (not layer alias), due to definition query restrictions
+            FieldName = "Taxon_txtLocalAcceptedName";
+            LayerNameFormat = "{0}";
+        }
+
+        public string Directory { get; set; }
+        public string FgdbName { get; set; }
+        public string PickListTableName { get; set; }
+        public string FieldName { get; set; }
+        public string LayerNameFormat { get; set; }
+        public Action<ILayer> LayerFixer { get; set; }
+        public string LayerFileName
+        {
+            get { return _layerFileName; }
+            set {
+                _layerFileName = Path.IsPathRooted(value) ? value
+                                                          : Path.Combine(Directory,value);
+            }
+        }
+        private string _layerFileName;
 
         internal string Validate()
         {
@@ -121,13 +136,11 @@ namespace PlantPickerAddIn
             }
             _layer.Name = string.Format(LayerNameFormat, plant);
             ((IFeatureLayerDefinition2)_layer).DefinitionExpression = definitionQuery;
-            AdjustLayer(_layer);
+            // Call the layer fixer delegate
+            var layerFixer = LayerFixer;
+            if (layerFixer != null)
+                layerFixer(_layer);
             ArcMap.Document.AddLayer(_layer);
-        }
-
-        virtual protected void AdjustLayer(ILayer layer)
-        {
-            LayerUtilities.RandomizeMarkerColor(layer);
         }
     }
 }

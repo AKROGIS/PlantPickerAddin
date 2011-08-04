@@ -5,13 +5,20 @@ namespace PlantPickerAddIn
 {
     public class SpeciesRank : ESRI.ArcGIS.Desktop.AddIns.ComboBox
     {
-        private readonly SpeciesRankLayerFactory _layerBuilder;
+        private readonly SpeciesLayerFactory _layerBuilder;
         
         public SpeciesRank()
         {
             try
             {
-                _layerBuilder = new SpeciesRankLayerFactory();
+                _layerBuilder = new SpeciesLayerFactory
+                                    {
+                                        LayerFileName = "Plant Species by State Rank.lyr",
+                                        PickListTableName = "akhpRankPicklist",
+                                        FieldName = "Taxon_vasc_aknhp_s_rank",
+                                        LayerNameFormat = "State Rank of {0}",
+                                        LayerFixer = LayerUtilities.RemoveUnusedItemsFromUniqueValueRenderer,
+                                    };
                 string msg = _layerBuilder.Validate();
                 if (string.IsNullOrEmpty(msg))
                 {

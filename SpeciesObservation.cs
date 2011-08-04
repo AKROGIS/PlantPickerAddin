@@ -5,13 +5,18 @@ namespace PlantPickerAddIn
 {
     public class SpeciesObservation : ESRI.ArcGIS.Desktop.AddIns.ComboBox
     {
-        private readonly SpeciesObservationLayerFactory _layerBuilder;
+        private readonly SpeciesLayerFactory _layerBuilder;
 
         public SpeciesObservation()
         {
             try
             {
-                _layerBuilder = new SpeciesObservationLayerFactory();
+                _layerBuilder = new SpeciesLayerFactory
+                                    {
+                                        LayerFileName = "Plant Observation by Species.lyr",
+                                        LayerNameFormat = "Observation types for {0}",
+                                        LayerFixer = LayerUtilities.RandomizeMarkerColor,
+                                    };
                 string msg = _layerBuilder.Validate();
                 if (string.IsNullOrEmpty(msg))
                 {

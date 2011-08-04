@@ -5,13 +5,18 @@ namespace PlantPickerAddIn
 {
     public class SpeciesCoverage : ESRI.ArcGIS.Desktop.AddIns.ComboBox
     {
-        private readonly SpeciesCoverageLayerFactory _layerBuilder;
+        private readonly SpeciesLayerFactory _layerBuilder;
 
         public SpeciesCoverage()
         {
             try
             {
-                _layerBuilder = new SpeciesCoverageLayerFactory();
+                _layerBuilder = new SpeciesLayerFactory
+                                    {
+                                        LayerFileName = "Plant Cover by Species.lyr",
+                                        LayerNameFormat = "Estimated abundance of {0}",
+                                        LayerFixer = LayerUtilities.RandomizeMarkerColor,
+                                    };
                 string msg = _layerBuilder.Validate();
                 if (string.IsNullOrEmpty(msg))
                 {
