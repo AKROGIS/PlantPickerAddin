@@ -2,7 +2,8 @@ Carl will maintain the database in MS Access.
 when Carl provides an updated database, do the following:
 1) open the DB in MS Access
 2) run the queries in code.sql to create the picklist tables
-3) export the database to Access 2003 format and call it Plants.mdb
+3) export the database to Access 2003 format and call it 
+   C:\Users\resarwas\Documents\Visual Studio 2010\Projects\PlantPickerAddIn\Data\Plants.mdb
 4) Run the CreatePlantFGDB.py script.  If it fails:
      a) Check the directory path in the script
 	 b) Check for database schema changes that would effect the table to table copies 
@@ -10,7 +11,7 @@ when Carl provides an updated database, do the following:
 	 d) The script can be recreated from the model in DENA_Plants.tbx
 	    check the input parameters in edit mode before running.
 5) The FGDB plants.gdb should now be up to date.
-6) The layer files have relative paths to plants.gdb
+6) Delete the plants.mdb
 7) The unique values symbology list in Plant Species by State Rank.lyr should be
    update to by using 'Add All Values' to capture any changes to the
    locally accepted name (Taxon_txtLocalAcceptedName). 

@@ -1,0 +1,13 @@
+To install the Denali Plant Species Selector
+1) Unzip Plants.zip to C:\Plants (This path is hard coded into the application)
+2) Double click C:\Plants\PlantPickerAddIn.esriAddIn to register the addin with ArcMap
+3) Open ArcMap
+4) From the main ArcMap menu, select Customize->Toolbars and enable the Denali Plant Species Selector toolbar
+   This toolbar works best if it is floating.  Grab the left edge of the toolbar and drag it to an open area
+   of the screen. Resize the toolbar until you can see all four picklist in the toolbar.
+
+Using the Denali Plant Species Selector
+1) Open a new or existing ArcMap document
+2) Select a species or state rank from one of the picklist to add that layer to your map.
+3) Adjust the layer properties as desired for aesthetic visual presentation.
+4) Repeat
