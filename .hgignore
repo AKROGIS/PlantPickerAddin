@@ -9,3 +9,4 @@ glob:*ReSharper.user
 syntax: glob
 Data/plants.gdb
 Data/Plants.mdb
+*.user

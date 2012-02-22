@@ -8,8 +8,8 @@
     <ProjectGuid>{C37767BB-18E6-4743-A5EC-1D7F2B38F487}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlantPickerAddIn</RootNamespace>
-    <AssemblyName>PlantPickerAddIn</AssemblyName>
+    <RootNamespace>DenaPlantPicker</RootNamespace>
+    <AssemblyName>DenaPlantPicker</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -92,16 +92,20 @@
     </AddInContent>
   </ItemGroup>
   <ItemGroup>
-    <AddInContent Include="Images\PlantPickerAddIn.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="SpeciesCoverage.cs" />
-    <AddInContent Include="Images\PlantSpecies.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ESRI.ArcGIS.ArcMapUI">
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\LargePlant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AddInContent>
+    <AddInContent Include="Images\SmallPlant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AddInContent>
   </ItemGroup>
   <PropertyGroup>
     <ZipFileExtension>esriAddIn</ZipFileExtension>

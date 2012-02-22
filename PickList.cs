@@ -4,7 +4,7 @@ using System.IO;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.ADF;  //for ComReleaser, requires ESRI.ArcGIS.ADF.Connection.Local.dll
 
-namespace PlantPickerAddIn
+namespace DenaPlantPicker
 {
     class PickList
     {

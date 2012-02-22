@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ESRI.ArcGIS.Carto; //For ILayer
 
-namespace PlantPickerAddIn
+namespace DenaPlantPicker
 {
     class SpeciesLayerFactory
     {
@@ -12,16 +12,16 @@ namespace PlantPickerAddIn
 
         public SpeciesLayerFactory()
         {
-            Directory = @"C:\Plants";
-            //Directory = @"X:\get_path_from_john";
-            FgdbName = Directory + @"\plants.gdb";
+            //Folder = @"C:\Plants";
+            Folder = @"X:\Albers\parks\dena\base\biologic\statewid";
+            FgdbName = Path.Combine(Folder,"Plants.gdb");
             PickListTableName = "taxonPicklist";
             //FieldName must be the featureclass field name (not layer alias), due to definition query restrictions
             FieldName = "Taxon_txtLocalAcceptedName";
             LayerNameFormat = "{0}";
         }
 
-        public string Directory { get; set; }
+        public string Folder { get; set; }
         public string FgdbName { get; set; }
         public string PickListTableName { get; set; }
         public string FieldName { get; set; }
@@ -32,7 +32,7 @@ namespace PlantPickerAddIn
             get { return _layerFileName; }
             set {
                 _layerFileName = Path.IsPathRooted(value) ? value
-                                                          : Path.Combine(Directory,value);
+                                                          : Path.Combine(Folder,value);
             }
         }
         private string _layerFileName;

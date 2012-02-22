@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace PlantPickerAddIn
+namespace DenaPlantPicker
 {
     public class SpeciesRank : ESRI.ArcGIS.Desktop.AddIns.ComboBox
     {

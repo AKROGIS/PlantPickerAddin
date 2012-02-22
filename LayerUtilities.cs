@@ -6,7 +6,7 @@ using ESRI.ArcGIS.Geodatabase; //For IFeature, IFeatureCursor, and IQueryFilter
 using ESRI.ArcGIS.ADF;         //for ComReleaser, requires ESRI.ArcGIS.ADF.Connection.Local.dll
 
 
-namespace PlantPickerAddIn
+namespace DenaPlantPicker
 {
     static class LayerUtilities
     {
