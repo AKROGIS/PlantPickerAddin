@@ -2,13 +2,13 @@
   <Name>Denali Plant Picker</Name>
   <AddInID>{4601c908-784f-4346-8692-1e74bd67b9fd}</AddInID>
   <Description>Generates a species specific layer file from the Denali plant species observation database</Description>
-  <Version>1.1</Version>
+  <Version>1.4</Version>
   <Image>Images\LargePlant.png</Image>
   <Author>Regan Sarwas</Author>
   <Company>National Park Service, Alaska</Company>
-  <Date>02/22/2012</Date>
+  <Date>3/9/2016</Date>
   <Targets>
-    <Target name="Desktop" version="10.0" />
+    <Target name="Desktop" version="10.4" />
   </Targets>
   <AddIn language="CLR" library="DenaPlantPicker.dll" namespace="DenaPlantPicker">
     <ArcMap>
