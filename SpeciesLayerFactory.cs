@@ -13,7 +13,7 @@ namespace DenaPlantPicker
         public SpeciesLayerFactory()
         {
             //Folder = @"C:\Plants";
-            Folder = @"X:\Albers\parks\dena\base\biologic\statewid";
+            Folder = @"X:\AKR\DENA\biologic\Plants";
             FgdbName = Path.Combine(Folder,"Plants.gdb");
             PickListTableName = "taxonPicklist";
             //FieldName must be the featureclass field name (not layer alias), due to definition query restrictions
