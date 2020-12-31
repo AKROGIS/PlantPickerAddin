@@ -7,7 +7,7 @@ provides an updated database, do the following:
 2) Run the queries in `code.sql` to create the picklist tables.
 3) Export the database to Access 2003 format and call it
    `C:\tmp\Plants.mdb` (or edit 
-   [`CreatePlantFGDB.py`](https://github.com/AKROGIS/PlantPickerAddin/blob/7f91919b9a6f47a1e44f55791d66bc3863f60f17/Scripts/CreatePlantFGDB.py#L12)
+   [`CreatePlantFGDB.py`](https://github.com/AKROGIS/PlantPickerAddin/blob/3c9567839d4f4df5d5a0cf1ec38c6937821bf076/Scripts/CreatePlantFGDB.py#L12)
    to match your preferred path/name.)
 4) Run the `CreatePlantFGDB.py` script. If it fails:
 
