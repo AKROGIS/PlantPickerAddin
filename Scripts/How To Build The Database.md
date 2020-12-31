@@ -1,4 +1,4 @@
-# Scripts/How To Build The Database
+# How To Build The Database
 
 Carl will maintain the master database in MS Access. When Carl
 provides an updated database, do the following:
