@@ -1,7 +1,14 @@
 # How To Build The Database
 
-Carl will maintain the master database in MS Access. When Carl
+Carl will maintain the master database in MS Access 2003. When Carl
 provides an updated database, do the following:
+
+**NOTE** ArcGIS Pro did not provide connections to MS Access until 2.6
+(and then only to `*.accdb` with the correct ODBC connection file).  This
+is very different from ArcGIS Desktop 10.x.  The following instructions
+and scripts only work with ArcGIS 10.x.  Instruction and script will need
+to be revised if/when Carl updates his database and/or converts to ArcGIS
+Pro.
 
 1) Open the DB in MS Access.
 2) Run the queries in `code.sql` to create the picklist tables.
