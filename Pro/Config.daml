@@ -1,0 +1,49 @@
+﻿<ArcGIS defaultAssembly="PlantPickerAddin.dll" defaultNamespace="PlantPickerAddin" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{2e61b774-7d2f-42a0-b80a-7a56adc42be4}" version="1.0" desktopVersion="2.7.26828">
+    <Name>Denali Plant Picker</Name>
+    <Description>Generates a species specific layer file from the Denali plant species observation database</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>Alaska Region GIS</Author>
+    <Company>National Park Service</Company>
+    <Date>3/12/2021 10:31:20 AM</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+  <modules>
+    <insertModule id="PlantPickerAddin_Module" className="PlantPickerModule" autoLoad="false" caption="PlantPickerModule">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <!--<tab id="PlantPickerAddin_Tab1" caption="New Tab">
+          <group refID="PlantPickerAddin_Group1"/>
+        </tab>-->
+      </tabs>
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="PlantPickerAddin_Group1" caption="Denali Plant Picker" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+          <comboBox refID="PlantPickerAddin_SpeciesCoverage" />
+          <comboBox refID="PlantPickerAddin_SpeciesObservation" />
+          <comboBox refID="PlantPickerAddin_SpeciesOccurrence" />
+          <comboBox refID="PlantPickerAddin_SpeciesRank" />
+        </group>
+      </groups>
+      <controls>
+        <!-- add your controls here -->
+        <comboBox id="PlantPickerAddin_SpeciesCoverage" caption="Species Coverage" className="SpeciesCoverage" itemWidth="140" extendedCaption="Extended Caption" isEditable="false" isReadOnly="true" resizable="true">
+          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        </comboBox>
+        <comboBox id="PlantPickerAddin_SpeciesObservation" caption="Species Observation" className="SpeciesObservation" itemWidth="140" extendedCaption="Extended Caption" isEditable="false" isReadOnly="true" resizable="true">
+          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        </comboBox>
+        <comboBox id="PlantPickerAddin_SpeciesOccurrence" caption="Species Occurrence" className="SpeciesOccurrence" itemWidth="140" extendedCaption="Extended Caption" isEditable="false" isReadOnly="true" resizable="true">
+          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        </comboBox>
+        <comboBox id="PlantPickerAddin_SpeciesRank" caption="Species Rank" className="SpeciesRank" itemWidth="140" extendedCaption="Extended Caption" isEditable="false" isReadOnly="true" resizable="true">
+          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        </comboBox>
+      </controls>
+    </insertModule>
+  </modules>
+</ArcGIS>
