@@ -44,6 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -123,6 +124,8 @@
     <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PickList.cs" />
+    <Compile Include="SpeciesLayerFactory.cs" />
     <Compile Include="SpeciesObservation.cs" />
     <Compile Include="PlantPickerModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

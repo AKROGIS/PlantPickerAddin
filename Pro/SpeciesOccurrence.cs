@@ -1,22 +1,8 @@
-﻿using ArcGIS.Core.CIM;
-using ArcGIS.Core.Data;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Catalog;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Extensions;
-using ArcGIS.Desktop.Framework;
+﻿using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Dialogs;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Layouts;
-using ArcGIS.Desktop.Mapping;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PlantPickerAddin
@@ -27,44 +13,37 @@ namespace PlantPickerAddin
     internal class SpeciesOccurrence : ComboBox
     {
 
-        private bool _isInitialized;
+        private readonly SpeciesLayerFactory _layerBuilder;
+        private readonly string _fisrtItem = "Select a Species";
 
         /// <summary>
         /// Combo Box constructor
         /// </summary>
         public SpeciesOccurrence()
         {
-            UpdateCombo();
+            _layerBuilder = new SpeciesLayerFactory("Plant Occurrence by Species.lyr")
+            {
+                LayerNameFormat = "All occurrences of {0}",
+                //LayerFixer = LayerUtilities.RandomizeMarkerColor,
+            };
+            Task.Run(InitAsync);
         }
 
-        /// <summary>
-        /// Updates the combo box with all the items.
-        /// </summary>
-
-        private void UpdateCombo()
+        private async void InitAsync()
         {
-            // TODO – customize this method to populate the combobox with your desired items  
-            if (_isInitialized)
-                SelectedItem = ItemCollection.FirstOrDefault(); //set the default item in the comboBox
-
-
-            if (!_isInitialized)
+            PickList picklist = await PlantPickerModule.Current.LoadSpeciesPickList();
+            if (!string.IsNullOrEmpty(picklist.ErrorMessage))
             {
-                Clear();
-
-                //Add 6 items to the combobox
-                for (int i = 0; i < 6; i++)
-                {
-                    string name = string.Format("Item {0}", i);
-                    Add(new ComboBoxItem(name));
-                }
-                _isInitialized = true;
+                ShowError("The data required for this tool is missing or invalid.\n" + picklist.ErrorMessage, "Configuration Error");
             }
-
-
-            Enabled = true; //enables the ComboBox
-            SelectedItem = ItemCollection.FirstOrDefault(); //set the default item in the comboBox
-
+            Clear();
+            Add(new ComboBoxItem(_fisrtItem));
+            foreach (string rank in picklist.Names)
+            {
+                Add(new ComboBoxItem(rank));
+            }
+            SelectedItem = ItemCollection.FirstOrDefault();
+            Enabled = true;
         }
 
         /// <summary>
@@ -80,7 +59,27 @@ namespace PlantPickerAddin
             if (string.IsNullOrEmpty(item.Text))
                 return;
 
-            // TODO  Code behavior when selection changes.    
+            if (string.Equals(item.Text, _fisrtItem))
+                return;
+
+            try
+            {
+                _layerBuilder.BuildLayer(item.Text);
+            }
+            // Catch all, because an uncaught exception in an Add-In will crash ArcGIS Pro
+            catch (Exception ex)
+            {
+                ShowError(GetType() + " encountered a problem.\n\n" + ex);
+            }
+
+        }
+
+        private static void ShowError(string msg, string title = "Unhandled Exception")
+        {
+            MessageBox.Show(msg, title,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Error);
+
         }
 
     }
