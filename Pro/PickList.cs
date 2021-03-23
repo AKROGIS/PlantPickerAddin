@@ -55,6 +55,7 @@ namespace PlantPickerAddin
         private void Load()
         {
             if (_loaded) { return; }
+            //TODO: Handle Exceptions in Picklist similar to the layer builder; i.e. throw custom exception and catch all in UI code
             try
             {
                 _names = GetNames().ToArray();
@@ -114,10 +115,12 @@ namespace PlantPickerAddin
                         while (rowCursor.MoveNext())
                         {
                             string name = (string)rowCursor.Current[index];
-                            if (!string.IsNullOrWhiteSpace(name))
-                            {
-                                names.Add(name);
-                            }
+                            // TODO: Null/Empty text in combo box is unclear; use something more obvious
+                            names.Add(name);
+                            //if (!string.IsNullOrWhiteSpace(name))
+                            //{
+                            //    names.Add(name);
+                            //}
                         }
                     }
                 }

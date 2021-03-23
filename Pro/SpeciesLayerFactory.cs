@@ -1,5 +1,6 @@
 ﻿using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Framework.Dialogs;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping; //For Layer
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace PlantPickerAddin
 {
+    public class LayerBuilderException : ApplicationException
+    {
+        public LayerBuilderException(string message) : base(message) {}
+    }
+
     class SpeciesLayerFactory
     {
         private readonly string _layerFilePath;
@@ -18,119 +24,80 @@ namespace PlantPickerAddin
                                                           : Path.Combine(PlantPickerModule.Current.Folder, layerfile);
             FieldName = "Taxon_txtLocalAcceptedName";
             LayerNameFormat = "{0}";
+            RandomizeMarkerColor = false;
         }
         public string FieldName { get; set; }
         public string LayerNameFormat { get; set; }
-        public Action<Layer> LayerFixer { get; set; }
-        public string LayerFileName
+        public bool RandomizeMarkerColor { get; set; }
+        public string LayerFilePath
         {
             get { return _layerFilePath; }
         }
 
-        //internal async Task<string> Validate()
-        //{
-        //    string result = ""; //ValidateLayerFile();
-
-        //    //if (String.IsNullOrEmpty(result))
-        //    //    result = ValidateFieldName();
-
-        //    return result;
-        //}
-
-        //private string ValidateLayerFile()
-        //{
-        //    if (string.IsNullOrEmpty(LayerFileName))
-        //        return "No layer file template is defined.";
-
-        //    if (!File.Exists(LayerFileName))
-        //        return "layer file '" + LayerFileName + "' does not exist.";
-
-        //    try
-        //    {
-        //        var layerFile = new LayerFileClass();
-        //        layerFile.Open(LayerFileName);
-        //        _layer = layerFile.Layer;
-        //        layerFile.Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _layer = null;
-        //        return "Could not load layer file '" + LayerFileName + "'\n" + ex.Message;
-        //    }
-
-        //    if (_layer == null)
-        //        return "layer file '" + LayerFileName + "' is empty.";
-
-        //    if (!(_layer is IFeatureLayerDefinition2))
-        //    {
-        //        _layer = null;
-        //        return "layer file '" + LayerFileName + "' does not support definition queries.";
-        //    }
-
-        //    return null;
-        //}
-
-        //private string ValidateFieldName()
-        //{
-        //    if (_layer == null)
-        //        throw new NullReferenceException("_layer");
-
-        //    var featureLayer = _layer as IFeatureLayer;
-        //    if (featureLayer == null || 
-        //        featureLayer.FeatureClass == null ||
-        //        featureLayer.FeatureClass.Fields == null)
-        //    {
-        //        _layer = null;
-        //        return "layer file '" + LayerFileName + "' does not have a feature class with fields.";
-        //    }
-        //    if (featureLayer.FeatureClass.Fields.FindField(FieldName) < 0)
-        //    {
-        //        _layer = null;
-        //        return "layer file '" + LayerFileName + "' does not have a field named '" + FieldName + "'.";
-        //    }
-
-        //    return null;
-        //}
-
-        internal void BuildLayer(string plant)
+        public async Task BuildLayerAsync(string plant)
         {
-            MessageBox.Show($"Build Layer for {plant}");
-            //Validate must be called by the user before calling BuildLayers
-            //    if (_layer == null)
-            //        throw new Exception("Unable to build this layer due to invalid (or unvalidated) configuration properties.");
-
-            //    //reload the layer file to create a new layer (we may get called many times)
-            //    var layerFile = new LayerFileClass();
-            //    layerFile.Open(LayerFileName);
-            //    _layer = layerFile.Layer;
-            //    layerFile.Close();
-
-            //    string definitionQuery;
-            //    if (string.IsNullOrEmpty(plant))
-            //    {
-            //        plant = "unspecified";
-            //        definitionQuery = "\"" + FieldName + "\" = '' OR \"" + FieldName + "\" is null";
-            //    }
-            //    else
-            //    {
-            //        definitionQuery = "\"" + FieldName + "\" = '" + plant.Replace("'", "''") + "'";
-            //    }
-            //    _layer.Name = string.Format(LayerNameFormat, plant);
-            //    ((IFeatureLayerDefinition2)_layer).DefinitionExpression = definitionQuery;
-            //    // Call the layer fixer delegate
-            //    var layerFixer = LayerFixer;
-            //    if (layerFixer != null)
-            //        layerFixer(_layer);
-            //    ArcMap.Document.AddLayer(_layer);
-
-            //    var lyrDocFromLyrxFile = new LayerDocument(LayerFileName);
-            //    var cimLyrDoc = lyrDocFromLyrxFile.GetCIMLayerDocument();
-            //    //modifying its renderer symbol to red
-            //    var r = ((CIMFeatureLayer)cimLyrDoc.LayerDefinitions[0]).Renderer as CIMSimpleRenderer;
-            //    r.Symbol.Symbol.SetColor(new CIMRGBColor() { R = 255 });
-            //    //create a layer and add it to a map
-            //    var lcp = new LayerCreationParams(cimLyrDoc);
-            //    var lyr = LayerFactory.Instance.CreateLayer<FeatureLayer>(lcp, map, LayerPosition.AutoArrange);
+            await QueuedTask.Run(() => BuildLayer(plant));
         }
+
+        private void BuildLayer(string plant)
+        {
+            //MessageBox.Show($"Build Layer for {plant}");
+
+            string definitionQuery;
+            // TODO: Null/Empty text in combo box is unclear; use something more obvious
+            if (string.IsNullOrEmpty(plant))
+            {
+                plant = "unspecified";
+                definitionQuery = "\"" + FieldName + "\" = '' OR \"" + FieldName + "\" is null";
+            }
+            else
+            {
+                definitionQuery = "\"" + FieldName + "\" = '" + plant.Replace("'", "''") + "'";
+            }
+
+            var layerName = string.Format(LayerNameFormat, plant);
+
+            if (MapView.Active == null)
+            {
+                throw new LayerBuilderException("No map available.");
+            }
+            var map = MapView.Active.Map;
+
+            var layerDocument = new LayerDocument(LayerFilePath);
+            var cimLayerDocument = layerDocument.GetCIMLayerDocument();
+            if (!(cimLayerDocument.LayerDefinitions[0] is CIMFeatureLayer cimFeatureLayer))
+            {
+                throw new LayerBuilderException("Layer file is not a feature layer.");
+            }
+            cimFeatureLayer.Name = layerName;
+            var featureTable = cimFeatureLayer.FeatureTable;
+            if (featureTable == null)
+            {
+                throw new LayerBuilderException("Feature layer has no data source.");
+            }
+            featureTable.DefinitionExpression = definitionQuery;
+
+            if (RandomizeMarkerColor)
+            {
+                if (!(cimFeatureLayer.Renderer is CIMSimpleRenderer renderer))
+                {
+                    throw new LayerBuilderException("Feature layer is not using a simple renderer.");
+                }
+                renderer.Symbol.Symbol.SetColor(RandomColor());
+            }
+
+            var layerParameters = new LayerCreationParams(cimLayerDocument);
+            LayerFactory.Instance.CreateLayer<FeatureLayer>(layerParameters, map, LayerPosition.AutoArrange);
+        }
+        private static CIMRGBColor RandomColor()
+        {
+            var color = new CIMRGBColor();
+            var rand = new Random();
+            color.R = rand.Next(256);
+            color.B = rand.Next(256);
+            color.G = rand.Next(256);
+            return color;
+        }
+
     }
 }
