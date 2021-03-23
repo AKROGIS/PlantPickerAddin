@@ -6,16 +6,6 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace PlantPickerAddin
 {
-    public class PicklistFieldWrongTypeException : ApplicationException
-    {
-        public PicklistFieldWrongTypeException() {}
-    }
-
-    public class PicklistFieldNotFoundException : ApplicationException
-    {
-        public PicklistFieldNotFoundException() {}
-    }
-
     class PickList
     {
         public PickList(string fgdb, string table, string field)
@@ -29,8 +19,11 @@ namespace PlantPickerAddin
         private readonly string _pickListFieldName;
         private string[] _names = new string[0];
         private bool _loaded = false;
-        private string _errorMessage = @"Picklist is not loaded";
 
+        /// <summary>
+        /// An enumeration of text values for use in a picklist (combo box).
+        /// The enumeration will be empty if the picklist has not been loaded (or failed to load) 
+        /// </summary>
         public IEnumerable<string> Names
         {
             get
@@ -38,15 +31,12 @@ namespace PlantPickerAddin
                 return _names;
             }
         }
-        
-        public string ErrorMessage
-        {
-            get
-            {
-                return _errorMessage;
-            }
-        }
 
+        /// <summary>
+        /// Populates Names with the list of text values from the field, table, and FGDB set in the constructor.
+        /// Must be run on the MCT; Call within QueryTask.Run()
+        /// Can be called multiple times, but it will return cached values unless the previous call failed.
+        /// </summary>
         public async Task LoadAsync()
         {
             await QueuedTask.Run(() => Load());
@@ -55,33 +45,18 @@ namespace PlantPickerAddin
         private void Load()
         {
             if (_loaded) { return; }
-            //TODO: Handle Exceptions in Picklist similar to the layer builder; i.e. throw custom exception and catch all in UI code
             try
             {
                 _names = GetNames().ToArray();
                 _loaded = true;
-                _errorMessage = null;
             }
             catch (GeodatabaseNotFoundOrOpenedException exception)
             {
-                _errorMessage = $"Picklist database ({_fgdbFileName}) not found: {exception.Message}.";
+                throw new ConfigurationException($"Picklist database ({_fgdbFileName}) not found: {exception.Message}.");
             }
-            catch (GeodatabaseCatalogDatasetException exception)
+            catch (GeodatabaseTableException)
             {
-                _errorMessage = $"Picklist table ({_pickListTableName}) not found: {exception.Message}.";
-            }
-            catch (PicklistFieldNotFoundException)
-            {
-                _errorMessage = $"Picklist field ({_pickListFieldName}) not found.";
-            }
-            catch (PicklistFieldWrongTypeException)
-            {
-                _errorMessage = $"Picklist field ({_pickListFieldName}) is not a text field.";
-            }
-            // An uncaught exception in an addin will crash ArcGIS Pro
-            catch (Exception ex)
-            {
-                _errorMessage = $"Unexpected error: {ex}.";
+                throw new ConfigurationException($"Picklist table ({_pickListTableName}) was not found.");
             }
         }
 
@@ -104,11 +79,11 @@ namespace PlantPickerAddin
                     var index = tableDefinition.FindField(_pickListFieldName);
                     if (index < 0)
                     {
-                        throw new PicklistFieldNotFoundException();
+                        throw new ConfigurationException($"Picklist field ({_pickListFieldName}) not found.");
                     }
                    if (tableDefinition.GetFields()[index].FieldType != FieldType.String)
                     {
-                        throw new PicklistFieldWrongTypeException();
+                        throw new ConfigurationException($"Picklist field ({_pickListFieldName}) is not a text field.");
                     }
                     using (RowCursor rowCursor = table.Search(null, false))
                     {

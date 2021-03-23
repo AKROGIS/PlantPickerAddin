@@ -1,5 +1,6 @@
 ﻿using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -54,5 +55,10 @@ namespace PlantPickerAddin
             get { return _folder; }
         }
 
+    }
+
+    public class ConfigurationException : ApplicationException
+    {
+        public ConfigurationException(string message) : base(message) { }
     }
 }

@@ -9,11 +9,6 @@ using System.Threading.Tasks;
 
 namespace PlantPickerAddin
 {
-    public class LayerBuilderException : ApplicationException
-    {
-        public LayerBuilderException(string message) : base(message) {}
-    }
-
     class SpeciesLayerFactory
     {
         private readonly string _layerFilePath;
@@ -59,21 +54,27 @@ namespace PlantPickerAddin
 
             if (MapView.Active == null)
             {
-                throw new LayerBuilderException("No map available.");
+                throw new ConfigurationException("No map available.");
             }
             var map = MapView.Active.Map;
 
             var layerDocument = new LayerDocument(LayerFilePath);
             var cimLayerDocument = layerDocument.GetCIMLayerDocument();
+            if (cimLayerDocument == null)
+            {
+                var msg = $"Layer File ({LayerFilePath}) not found or invalid.";
+                throw new ConfigurationException(msg);
+            }
+
             if (!(cimLayerDocument.LayerDefinitions[0] is CIMFeatureLayer cimFeatureLayer))
             {
-                throw new LayerBuilderException("Layer file is not a feature layer.");
+                throw new ConfigurationException("Layer file is not a feature layer.");
             }
             cimFeatureLayer.Name = layerName;
             var featureTable = cimFeatureLayer.FeatureTable;
             if (featureTable == null)
             {
-                throw new LayerBuilderException("Feature layer has no data source.");
+                throw new ConfigurationException("Feature layer has no data source.");
             }
             featureTable.DefinitionExpression = definitionQuery;
 
@@ -81,7 +82,7 @@ namespace PlantPickerAddin
             {
                 if (!(cimFeatureLayer.Renderer is CIMSimpleRenderer renderer))
                 {
-                    throw new LayerBuilderException("Feature layer is not using a simple renderer.");
+                    throw new ConfigurationException("Feature layer is not using a simple renderer.");
                 }
                 renderer.Symbol.Symbol.SetColor(RandomColor());
             }

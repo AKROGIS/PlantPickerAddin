@@ -31,18 +31,27 @@ namespace PlantPickerAddin
 
         private async void InitAsync()
         {
-            //TODO: Handle Exceptions in Picklist similar to the layer builder
-            PickList picklist = await PlantPickerModule.Current.LoadSpeciesPickList();
-            if (!string.IsNullOrEmpty(picklist.ErrorMessage))
-            {
-                ShowError("The data required for this tool is missing or invalid.\n" + picklist.ErrorMessage, "Configuration Error");
-            }
             Clear();
             Add(new ComboBoxItem(_firstItem));
-            foreach (string rank in picklist.Names)
+
+            PickList picklist = null;
+            try
             {
-                Add(new ComboBoxItem(rank));
+                picklist = await PlantPickerModule.Current.LoadSpeciesPickList();
             }
+            // Catch all, because an uncaught exception in an Add-In will crash ArcGIS Pro
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+            if (picklist != null)
+            {
+                foreach (string rank in picklist.Names)
+                {
+                    Add(new ComboBoxItem(rank));
+                }
+            }
+
             SelectedItem = ItemCollection.FirstOrDefault();
             Enabled = true;
         }
@@ -71,17 +80,18 @@ namespace PlantPickerAddin
             // Catch all, because an uncaught exception in an Add-In will crash ArcGIS Pro
             catch (Exception ex)
             {
-                ShowError(GetType() + " encountered a problem.\n\n" + ex.Message);
+                ShowError(ex);
             }
 
         }
 
-        private static void ShowError(string msg, string title = "Unhandled Exception")
+        private void ShowError(Exception ex)
         {
+            var title = (ex is ConfigurationException) ? "Configuration Error" : "Unexpected Error";
+            var msg = GetType() + " encountered a problem.\n\n" + ex.Message;
             MessageBox.Show(msg, title,
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Error);
-
         }
 
     }
