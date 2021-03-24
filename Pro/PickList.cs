@@ -22,7 +22,7 @@ namespace PlantPickerAddin
 
         /// <summary>
         /// An enumeration of text values for use in a picklist (combo box).
-        /// The enumeration will be empty if the picklist has not been loaded (or failed to load) 
+        /// The enumeration is never null, but it will be empty if the picklist has not been loaded (or failed to load). 
         /// </summary>
         public IEnumerable<string> Names
         {
@@ -33,9 +33,12 @@ namespace PlantPickerAddin
         }
 
         /// <summary>
-        /// Populates Names with the list of text values from the field, table, and FGDB set in the constructor.
-        /// Must be run on the MCT; Call within QueryTask.Run()
+        /// Creates an asynchronous queued task to populate <see cref="Names"/> with the list of text values from the field,
+        /// table, and FGDB set in the constructor.
         /// Can be called multiple times, but it will return cached values unless the previous call failed.
+        /// 
+        /// Will generate any number of exceptions.  Anything but a <see cref="ConfigurationException"/> should be a programmming error.
+        /// A ConfigurationException will result if the necessary external data for the picklist is deleted, moved, or altered.
         /// </summary>
         public async Task LoadAsync()
         {
@@ -62,7 +65,7 @@ namespace PlantPickerAddin
 
         /// <summary>
         /// Reads the list of text values from the field, table, and FGDB set in the constructor.
-        /// Must be run on the MCT; Call within QueryTask.Run()
+        /// Must be run on the MCT; Call within <see cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/>
         /// </summary>
         /// <returns>A list of strings to use as picklist values.</returns>
         private List<string> GetNames()

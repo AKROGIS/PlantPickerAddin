@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace PlantPickerAddin
 {
     /// <summary>
-    /// Represents the ComboBox
+    /// A combo box for selecting a plant species and adding an occurance layer for that species
+    /// to the current map.
     /// </summary>
     internal class SpeciesOccurrence : ComboBox
     {
@@ -30,6 +31,9 @@ namespace PlantPickerAddin
             Task.Run(InitAsync);
         }
 
+        /// <summary>
+        /// Asynchronously load the combo box data.
+        /// </summary>
         private async void InitAsync()
         {
             Clear();
@@ -59,7 +63,9 @@ namespace PlantPickerAddin
         }
 
         /// <summary>
-        /// The on comboBox selection change event. 
+        /// Called by the framework when the selection in the combo box is changed.
+        /// (Also called when the `SelectedItem` is changed programatically.
+        /// When called it will load the layer file and add it to the current map.
         /// </summary>
         /// <param name="item">The newly selected combo box item</param>
         protected async override void OnSelectionChange(ComboBoxItem item)
@@ -87,6 +93,10 @@ namespace PlantPickerAddin
 
         }
 
+        /// <summary>
+        /// Display any (and all) excpetions to the user.
+        /// </summary>
+        /// <param name="ex">The exception to display to the user.</param>
         private void ShowError(Exception ex)
         {
             var title = (ex is ConfigurationException) ? "Configuration Error" : "Unexpected Error";
