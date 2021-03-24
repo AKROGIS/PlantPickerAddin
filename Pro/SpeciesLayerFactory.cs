@@ -39,7 +39,6 @@ namespace PlantPickerAddin
             //MessageBox.Show($"Build Layer for {plant}");
 
             string definitionQuery;
-            // TODO: Null/Empty text in combo box is unclear; use something more obvious
             if (string.IsNullOrEmpty(plant))
             {
                 plant = "unspecified";

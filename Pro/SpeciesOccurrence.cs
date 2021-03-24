@@ -15,6 +15,7 @@ namespace PlantPickerAddin
 
         private readonly SpeciesLayerFactory _layerBuilder;
         private readonly string _firstItem = "Select a Species";
+        private readonly string _nullMarker = "* Not Specified *";
 
         /// <summary>
         /// Combo Box constructor
@@ -46,9 +47,10 @@ namespace PlantPickerAddin
             }
             if (picklist != null)
             {
-                foreach (string rank in picklist.Names)
+                foreach (string item in picklist.Names)
                 {
-                    Add(new ComboBoxItem(rank));
+                    var item2 = (string.IsNullOrEmpty(item)) ? _nullMarker : item;
+                    Add(new ComboBoxItem(item2));
                 }
             }
 
@@ -66,16 +68,16 @@ namespace PlantPickerAddin
             if (item == null)
                 return;
 
-            // TODO: Null/Empty text in combo box is unclear; use something more obvious
-            //if (string.IsNullOrEmpty(item.Text))
-            //    return;
+            if (string.IsNullOrEmpty(item.Text))
+                return;
 
             if (string.Equals(item.Text, _firstItem))
                 return;
 
+            var text = string.Equals(item.Text, _nullMarker) ? null : item.Text;
             try
             {
-                await _layerBuilder.BuildLayerAsync(item.Text);
+                await _layerBuilder.BuildLayerAsync(text);
             }
             // Catch all, because an uncaught exception in an Add-In will crash ArcGIS Pro
             catch (Exception ex)

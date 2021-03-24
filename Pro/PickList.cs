@@ -90,12 +90,7 @@ namespace PlantPickerAddin
                         while (rowCursor.MoveNext())
                         {
                             string name = (string)rowCursor.Current[index];
-                            // TODO: Null/Empty text in combo box is unclear; use something more obvious
                             names.Add(name);
-                            //if (!string.IsNullOrWhiteSpace(name))
-                            //{
-                            //    names.Add(name);
-                            //}
                         }
                     }
                 }
