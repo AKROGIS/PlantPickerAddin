@@ -21,7 +21,7 @@ namespace PlantPickerAddin
             _layerBuilder = new SpeciesLayerFactory("Plant Occurrence by Species.lyrx")
             {
                 LayerNameFormat = "All occurrences of {0}",
-                RandomizeMarkerColor = true,
+                LayerFixer = LayerUtilities.RandomizeMarkerColor,
             };
             Task.Run(InitAsync);
         }

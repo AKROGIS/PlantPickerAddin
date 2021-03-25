@@ -21,7 +21,7 @@ namespace PlantPickerAddin
             _layerBuilder = new SpeciesLayerFactory("Plant Cover by Species.lyrx")
             {
                 LayerNameFormat = "Estimated abundance of {0}",
-                RandomizeMarkerColor = true,
+                LayerFixer = LayerUtilities.RandomizeMarkerColor,
             };
             Task.Run(InitAsync);
         }

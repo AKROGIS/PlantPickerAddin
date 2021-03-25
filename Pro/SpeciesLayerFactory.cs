@@ -35,7 +35,6 @@ namespace PlantPickerAddin
                                                           : Path.Combine(PlantPickerModule.Current.Folder, layerfile);
             FieldName = "Taxon_txtLocalAcceptedName";
             LayerNameFormat = "{0}";
-            RandomizeMarkerColor = false;
         }
 
         /// <summary>
@@ -50,10 +49,9 @@ namespace PlantPickerAddin
         public string LayerNameFormat { get; set; }
 
         /// <summary>
-        /// True if the layer file should have a new random color assigned to the features.
-        /// Assumes a simple renderer.
+        /// Specify an action to transform the layer
         /// </summary>
-        public bool RandomizeMarkerColor { get; set; }
+        public Action<CIMFeatureLayer> LayerFixer { get; set; }
 
         /// <summary>
         /// The full path of the layer file provided in the class constructor
@@ -125,15 +123,8 @@ namespace PlantPickerAddin
             }
             featureTable.DefinitionExpression = definitionQuery;
 
-            if (RandomizeMarkerColor)
-            {
-                // FIXME: need to randomize UniqueValueRender and ClassBreakRenderer
-                if (!(cimFeatureLayer.Renderer is CIMSimpleRenderer renderer))
-                {
-                    throw new ConfigurationException("Feature layer is not using a simple renderer.");
-                }
-                renderer.Symbol.Symbol.SetColor(RandomColor());
-            }
+            if (LayerFixer != null)
+                LayerFixer(cimFeatureLayer);
 
             var layerParameters = new LayerCreationParams(cimLayerDocument);
             LayerFactory.Instance.CreateLayer<FeatureLayer>(layerParameters, map, LayerPosition.AutoArrange);

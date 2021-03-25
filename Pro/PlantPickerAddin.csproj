@@ -124,6 +124,7 @@
     <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LayerUtilities.cs" />
     <Compile Include="PickList.cs" />
     <Compile Include="SpeciesLayerFactory.cs" />
     <Compile Include="SpeciesObservation.cs" />
