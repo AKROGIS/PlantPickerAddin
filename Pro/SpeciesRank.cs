@@ -1,77 +1,73 @@
-﻿using ArcGIS.Core.CIM;
-using ArcGIS.Core.Data;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Catalog;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Extensions;
-using ArcGIS.Desktop.Framework;
+﻿using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Dialogs;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Layouts;
-using ArcGIS.Desktop.Mapping;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PlantPickerAddin
 {
     /// <summary>
-    /// Represents the ComboBox
+    /// A combo box for selecting a state rank and layer with all species in that rank
+    /// to the current map.
     /// </summary>
     internal class SpeciesRank : ComboBox
     {
-
-        private bool _isInitialized;
-
         /// <summary>
         /// Combo Box constructor
         /// </summary>
         public SpeciesRank()
         {
-            UpdateCombo();
+            _layerBuilder = new SpeciesLayerFactory("Plant Species by State Rank.lyrx")
+            {
+                LayerNameFormat = "State Rank of {0}",
+                // TODO: RemoveUnusedItemsFromUniqueValueRenderer = true;
+            };
+            Task.Run(InitAsync);
         }
 
+        private readonly SpeciesLayerFactory _layerBuilder;
+        private readonly string _firstItem = "Select a Rank";
+        private readonly string _nullMarker = "* Not Specified *";
+
         /// <summary>
-        /// Updates the combo box with all the items.
+        /// Asynchronously load the combo box data.
         /// </summary>
-
-        private void UpdateCombo()
+        private async void InitAsync()
         {
-            // TODO – customize this method to populate the combobox with your desired items  
-            if (_isInitialized)
-                SelectedItem = ItemCollection.FirstOrDefault(); //set the default item in the comboBox
+            Clear();
+            Add(new ComboBoxItem(_firstItem));
 
-
-            if (!_isInitialized)
+            PickList picklist = null;
+            try
             {
-                Clear();
-
-                //Add 6 items to the combobox
-                for (int i = 0; i < 6; i++)
+                picklist = await PlantPickerModule.Current.LoadRankPickList();
+            }
+            // Catch all, because an uncaught exception in an Add-In will crash ArcGIS Pro
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+            if (picklist != null)
+            {
+                foreach (string item in picklist.Names)
                 {
-                    string name = string.Format("Item {0}", i);
-                    Add(new ComboBoxItem(name));
+                    var item2 = (string.IsNullOrEmpty(item)) ? _nullMarker : item;
+                    Add(new ComboBoxItem(item2));
                 }
-                _isInitialized = true;
             }
 
-
-            Enabled = true; //enables the ComboBox
-            SelectedItem = ItemCollection.FirstOrDefault(); //set the default item in the comboBox
-
+            SelectedItem = ItemCollection.FirstOrDefault();
+            Enabled = true;
         }
 
         /// <summary>
-        /// The on comboBox selection change event. 
+        /// Called by the framework when the selection in the combo box is changed.
+        /// (Also called when the `SelectedItem` is changed programatically.
+        /// When called it will load the layer file and add it to the current map.
         /// </summary>
         /// <param name="item">The newly selected combo box item</param>
-        protected override void OnSelectionChange(ComboBoxItem item)
+        protected async override void OnSelectionChange(ComboBoxItem item)
         {
 
             if (item == null)
@@ -80,7 +76,33 @@ namespace PlantPickerAddin
             if (string.IsNullOrEmpty(item.Text))
                 return;
 
-            // TODO  Code behavior when selection changes.    
+            if (string.Equals(item.Text, _firstItem))
+                return;
+
+            var text = string.Equals(item.Text, _nullMarker) ? null : item.Text;
+            try
+            {
+                await _layerBuilder.BuildLayerAsync(text);
+            }
+            // Catch all, because an uncaught exception in an Add-In will crash ArcGIS Pro
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+
+        }
+
+        /// <summary>
+        /// Display any (and all) excpetions to the user.
+        /// </summary>
+        /// <param name="ex">The exception to display to the user.</param>
+        private void ShowError(Exception ex)
+        {
+            var title = (ex is ConfigurationException) ? "Configuration Error" : "Unexpected Error";
+            var msg = GetType() + " encountered a problem.\n\n" + ex.Message;
+            MessageBox.Show(msg, title,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Error);
         }
 
     }

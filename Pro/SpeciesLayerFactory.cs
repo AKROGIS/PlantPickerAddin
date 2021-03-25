@@ -127,6 +127,7 @@ namespace PlantPickerAddin
 
             if (RandomizeMarkerColor)
             {
+                // FIXME: need to randomize UniqueValueRender and ClassBreakRenderer
                 if (!(cimFeatureLayer.Renderer is CIMSimpleRenderer renderer))
                 {
                     throw new ConfigurationException("Feature layer is not using a simple renderer.");
