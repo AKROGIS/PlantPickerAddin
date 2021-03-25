@@ -13,11 +13,6 @@ namespace PlantPickerAddin
     /// </summary>
     internal class SpeciesOccurrence : ComboBox
     {
-
-        private readonly SpeciesLayerFactory _layerBuilder;
-        private readonly string _firstItem = "Select a Species";
-        private readonly string _nullMarker = "* Not Specified *";
-
         /// <summary>
         /// Combo Box constructor
         /// </summary>
@@ -30,6 +25,10 @@ namespace PlantPickerAddin
             };
             Task.Run(InitAsync);
         }
+
+        private readonly SpeciesLayerFactory _layerBuilder;
+        private readonly string _firstItem = "Select a Species";
+        private readonly string _nullMarker = "* Not Specified *";
 
         /// <summary>
         /// Asynchronously load the combo box data.
