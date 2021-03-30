@@ -2,7 +2,7 @@
   <AddInInfo id="{2e61b774-7d2f-42a0-b80a-7a56adc42be4}" version="1.0" desktopVersion="2.7.26828">
     <Name>Denali Plant Picker</Name>
     <Description>Generates a species specific layer file from the Denali plant species observation database</Description>
-    <Image>Images\AddinDesktop32.png</Image>
+    <Image>Images\Plant32.png</Image>
     <Author>Alaska Region GIS</Author>
     <Company>National Park Service</Company>
     <Date>3/12/2021 10:31:20 AM</Date>

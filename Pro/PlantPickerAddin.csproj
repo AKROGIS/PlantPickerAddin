@@ -118,10 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.daml" />
-    <AddInContent Include="Images\AddInDesktop16.png" />
-    <AddInContent Include="Images\AddInDesktop32.png" />
-    <AddInContent Include="DarkImages\AddInDesktop16.png" />
-    <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LayerUtilities.cs" />
@@ -133,6 +129,14 @@
     <Compile Include="SpeciesCoverage.cs" />
     <Compile Include="SpeciesOccurrence.cs" />
     <Compile Include="SpeciesRank.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="DarkImages\Plant16.png" />
+    <AddInContent Include="DarkImages\Plant32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AddInContent Include="Images\Plant16.png" />
+    <AddInContent Include="Images\Plant32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--
