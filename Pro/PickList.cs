@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace PlantPickerAddin
 {
@@ -84,7 +84,7 @@ namespace PlantPickerAddin
                     {
                         throw new ConfigurationException($"Picklist field ({_pickListFieldName}) not found.");
                     }
-                   if (tableDefinition.GetFields()[index].FieldType != FieldType.String)
+                    if (tableDefinition.GetFields()[index].FieldType != FieldType.String)
                     {
                         throw new ConfigurationException($"Picklist field ({_pickListFieldName}) is not a text field.");
                     }
