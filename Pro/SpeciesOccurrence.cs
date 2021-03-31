@@ -22,6 +22,7 @@ namespace PlantPickerAddin
             {
                 LayerNameFormat = "All occurrences of {0}",
                 LayerFixer = LayerUtilities.RandomizeMarkerColor,
+                FieldName = "Taxon_txtLocalAcceptedName",
             };
             Task.Run(InitAsync);
         }
