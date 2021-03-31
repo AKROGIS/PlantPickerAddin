@@ -18,24 +18,30 @@
           <comboBox refID="PlantPickerAddin_SpeciesObservation" />
           <comboBox refID="PlantPickerAddin_SpeciesCoverage" />
           <comboBox refID="PlantPickerAddin_SpeciesRank" />
+          
+          <!-- TODO: Add a Adding Layer ... Progressor -->
+          
         </group>
       </groups>
       <controls>
-        <comboBox id="PlantPickerAddin_SpeciesOccurrence" caption="All occurrences of:" className="SpeciesOccurrence" itemWidth="100" extendedCaption="Create a layer of plant occurrences by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB3">
+        <comboBox id="PlantPickerAddin_SpeciesOccurrence" caption="All occurrences of:" className="SpeciesOccurrence" itemWidth="100" extendedCaption="Create a layer of plant occurrences by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB1" condition="esri_mapping_mapPane">
           <tooltip heading="All Occurrances of Species">
-            Select a plant species to add a layer to the map showing all occurrances of that species.<disabledText /></tooltip>
+            Select a plant species to add a layer to the map showing all occurrances of that species.<disabledText>A map is required.</disabledText>
+        </tooltip>
         </comboBox>
-        <comboBox id="PlantPickerAddin_SpeciesObservation" caption="Observation types for:" className="SpeciesObservation" itemWidth="100" extendedCaption="Create a layer of plant observations by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB2">
+        <comboBox id="PlantPickerAddin_SpeciesObservation" caption="Observation types for:" className="SpeciesObservation" itemWidth="100" extendedCaption="Create a layer of plant observations by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB2" condition="esri_mapping_mapPane">
           <tooltip heading="Observation Types for Species">
-            Select a plant species to add a layer to the map showing the observtion types of that species.<disabledText /></tooltip>
+            Select a plant species to add a layer to the map showing the observtion types of that species.<disabledText>A map is required.</disabledText>
+        </tooltip>
         </comboBox>
-        <comboBox id="PlantPickerAddin_SpeciesCoverage" caption="Est. Abundance of:" className="SpeciesCoverage" itemWidth="100" extendedCaption="Create a layer of plant coverage by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB1">
+        <comboBox id="PlantPickerAddin_SpeciesCoverage" caption="Est. Abundance of:" className="SpeciesCoverage" itemWidth="100" extendedCaption="Create a layer of plant coverage by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB3" condition="esri_mapping_mapPane">
           <tooltip heading="Estimated Abundance of Species">
-            Select a plant species to add a layer to the map showing the estimated abundance of that species.<disabledText /></tooltip>
+            Select a plant species to add a layer to the map showing the estimated abundance of that species.<disabledText>A map is required.</disabledText>
+        </tooltip>
         </comboBox>
-        <comboBox id="PlantPickerAddin_SpeciesRank" caption="State rank of:" className="SpeciesRank" itemWidth="85" extendedCaption="Create a layer of plant species with the selected state rank" isEditable="false" isReadOnly="true" resizable="true" keytip="CB4">
+        <comboBox id="PlantPickerAddin_SpeciesRank" caption="State rank of:" className="SpeciesRank" itemWidth="85" extendedCaption="Create a layer of plant species with the selected state rank" isEditable="false" isReadOnly="true" resizable="true" keytip="CB4" condition="esri_mapping_mapPane">
           <tooltip heading="Occurrences with State Rank">
-            Select a state rank to add a layer to the map showing all occurrances with that rank.<disabledText /></tooltip>
+            Select a state rank to add a layer to the map showing all occurrances with that rank.<disabledText>A map is required.</disabledText></tooltip>
         </comboBox>        
       </controls>
     </insertModule>
