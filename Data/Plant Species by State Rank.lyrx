@@ -19,7 +19,7 @@
         "type" : "CIMLayerElevationSurface",
         "mapElevationID" : "{07E96B76-CED1-4FE4-A4C1-330A6F80CB01}"
       },
-      "expanded" : true,
+      "expanded" : false,
       "layerType" : "Operational",
       "showLegends" : true,
       "visibility" : true,
