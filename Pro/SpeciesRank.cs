@@ -21,6 +21,7 @@ namespace PlantPickerAddin
             _layerBuilder = new SpeciesLayerFactory("Plant Species by State Rank.lyrx")
             {
                 LayerNameFormat = "State Rank of {0}",
+                FieldName = "Taxon_vasc_aknhp_s_rank",
                 LayerFixer = LayerUtilities.RemoveUnusedItemsFromUniqueValueRenderer,
             };
             Task.Run(InitAsync);
