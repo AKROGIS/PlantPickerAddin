@@ -49,9 +49,14 @@ namespace PlantPickerAddin
         public string LayerNameFormat { get; set; }
 
         /// <summary>
-        /// Specify an action to transform the layer
+        /// Specify an action to transform the layer definition - CIM (before adding to map)
         /// </summary>
-        public Action<CIMFeatureLayer> LayerFixer { get; set; }
+        public Action<CIMFeatureLayer> CIMFixer { get; set; }
+
+        /// <summary>
+        /// Specify an action to transform the layer model (after adding to map)
+        /// </summary>
+        public Action<FeatureLayer> LayerFixer { get; set; }
 
         /// <summary>
         /// The full path of the layer file provided in the class constructor
@@ -123,11 +128,15 @@ namespace PlantPickerAddin
             }
             featureTable.DefinitionExpression = definitionQuery;
 
-            if (LayerFixer != null)
-                LayerFixer(cimFeatureLayer);
+            if (CIMFixer != null)
+                CIMFixer(cimFeatureLayer);
 
             var layerParameters = new LayerCreationParams(cimLayerDocument);
-            LayerFactory.Instance.CreateLayer<FeatureLayer>(layerParameters, map, LayerPosition.AutoArrange);
+            var geoLayer = LayerFactory.Instance.CreateLayer<FeatureLayer>(layerParameters, map, LayerPosition.AutoArrange);
+
+            if (LayerFixer != null)
+                LayerFixer(geoLayer);
+
         }
         private static CIMRGBColor RandomColor()
         {

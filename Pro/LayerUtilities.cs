@@ -1,4 +1,5 @@
 ﻿using ArcGIS.Core.CIM;
+using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ namespace PlantPickerAddin
             return color;
         }
 
-        internal static void RemoveUnusedItemsFromUniqueValueRenderer(CIMFeatureLayer geoLayer)
+        internal static void RemoveUnusedItemsFromUniqueValueRenderer(FeatureLayer geoLayer)
         {
             if (geoLayer == null)
                 return;
