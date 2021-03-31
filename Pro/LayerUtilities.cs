@@ -71,41 +71,62 @@ namespace PlantPickerAddin
         {
             if (geoLayer == null)
                 return;
-            var renderer = geoLayer.Renderer as CIMUniqueValueRenderer;
+            var cimLayer = geoLayer.GetDefinition() as CIMFeatureLayer;
+            if (cimLayer == null)
+                return;
+            var renderer = cimLayer.Renderer as CIMUniqueValueRenderer;
             if (renderer == null)
                 throw new ConfigurationException("Feature layer does not have a unique value renderer.");
 
             //I need to create a unique list of all values in the field
             //I will check every value in the renderer to see if it is in the valid values list
-            //I use Dictionary because it enforces uniqueness and is O(1) for contains, while List is O(n).
+            HashSet<string> validValues = GetAllValues(renderer.Fields[0], geoLayer, cimLayer.FeatureTable.DefinitionExpression);
 
-            Dictionary<string, int> validValues = GetAllValues(renderer.Fields[0], geoLayer);
-
-            foreach (var group in renderer.Groups)
+            //Assume 1 Unique Value Group, remove all un-needed classes
+            // Remove classes when class.Values[0].FieldValues[0] is not in validValues; DO NOT modify list during enumeration
+            var classesToKeep = new List<CIMUniqueValueClass>();
+            foreach (var rendererClass in renderer.Groups[0].Classes)
             {
-                foreach (var rendererClass in group.Classes)
-                {
-                    foreach (var value in rendererClass.Values)
-                    {
-                        var valuesToKeep = new List<string>();
-                        foreach (var fieldValue in value.FieldValues)
-                        {
-                            if (validValues.ContainsKey(fieldValue))
-                                valuesToKeep.Add(fieldValue);
-                        }
-                        value.FieldValues = valuesToKeep.ToArray();
-                    }
+                // Assumes there is only 1 field in the unique value class
+                if (validValues.Contains(rendererClass.Values[0].FieldValues[0])) {
+                        classesToKeep.Add(rendererClass);
                 }
             }
+            renderer.Groups[0].Classes = classesToKeep.ToArray();
+            geoLayer.SetDefinition(cimLayer);
         }
 
-        private static Dictionary<string, int> GetAllValues(string fieldName, CIMFeatureLayer layer)
+        private static HashSet<string> GetAllValues(string fieldName, FeatureLayer layer, string queryExpression)
         {
-            var results = new Dictionary<string, int>();
-            // TODO: Get list of values in field `fieldName` in layer.FeatureTable
-            // create a ArcGIS.Core.Data.Table from layer.FeatureTable
-            // See PickList.GetNames for the rest of the details.
-            return results;
+            var values = new HashSet<string>();
+            var table = layer.GetTable();
+            if (table == null)
+            {
+                throw new ConfigurationException("Feature layer has no data source.");
+            }
+            TableDefinition tableDefinition = table.GetDefinition();
+            var index = tableDefinition.FindField(fieldName);
+            if (index < 0)
+            {
+                throw new ConfigurationException($"Feature layer field ({fieldName}) not found in data source.");
+            }
+            if (tableDefinition.GetFields()[index].FieldType != FieldType.String)
+            {
+                throw new ConfigurationException($"Feature layer field ({fieldName}) is not a text field.");
+            }
+            var query = new QueryFilter {
+                WhereClause = queryExpression,
+            };
+            using (RowCursor rowCursor = table.Search(query, false))
+            {
+                while (rowCursor.MoveNext())
+                {
+                    string name = (string)rowCursor.Current[index];
+                    values.Add(name);
+                }
+            }
+            return values;
         }
+
     }
 }
