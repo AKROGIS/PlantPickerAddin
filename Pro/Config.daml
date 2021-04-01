@@ -18,9 +18,6 @@
           <comboBox refID="PlantPickerAddin_SpeciesObservation" />
           <comboBox refID="PlantPickerAddin_SpeciesCoverage" />
           <comboBox refID="PlantPickerAddin_SpeciesRank" />
-          
-          <!-- TODO: Add a Adding Layer ... Progressor -->
-          
         </group>
       </groups>
       <controls>

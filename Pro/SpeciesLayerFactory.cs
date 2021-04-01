@@ -76,7 +76,10 @@ namespace PlantPickerAddin
         /// <param name="attributeValue">Only features with <see cref="FieldName"/> == attributeValue will be displayed in this layer</param>
         public async Task BuildLayerAsync(string attributeValue)
         {
+            var progressDialog = new ProgressDialog("Building layer...");
+            progressDialog.Show();
             await QueuedTask.Run(() => BuildLayer(attributeValue));
+            progressDialog.Hide();
         }
 
         /// <summary>
