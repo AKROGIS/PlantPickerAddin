@@ -122,6 +122,10 @@
   <ItemGroup>
     <Compile Include="LayerUtilities.cs" />
     <Compile Include="PickList.cs" />
+    <Compile Include="PlantPickerDockpane.xaml.cs">
+      <DependentUpon>PlantPickerDockpane.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlantPickerDockpaneViewModel.cs" />
     <Compile Include="SpeciesLayerFactory.cs" />
     <Compile Include="SpeciesObservation.cs" />
     <Compile Include="PlantPickerModule.cs" />
@@ -137,6 +141,12 @@
   <ItemGroup>
     <AddInContent Include="Images\Plant16.png" />
     <AddInContent Include="Images\Plant32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="PlantPickerDockpane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--

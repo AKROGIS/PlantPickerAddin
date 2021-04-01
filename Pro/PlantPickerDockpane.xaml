@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="PlantPickerAddin.PlantPickerDockpaneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
+             xmlns:ui="clr-namespace:PlantPickerAddin"
+             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{Binding Path=ui.PlantPickerDockpaneViewModel}">
+     <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" LastChildFill="true" KeyboardNavigation.TabNavigation="Local" Height="30">
+            <TextBlock Grid.Column="1" Text="{Binding Heading}" Style="{DynamicResource Esri_TextBlockDockPaneHeader}">
+                <TextBlock.ToolTip>
+                    <WrapPanel Orientation="Vertical" MaxWidth="300">
+                        <TextBlock Text="{Binding Heading}" TextWrapping="Wrap"/>
+                    </WrapPanel>
+                </TextBlock.ToolTip>
+            </TextBlock>
+        </DockPanel>
+        <ComboBox Grid.Row="1" ItemsSource="{Binding AllSpecies}" SelectedItem="{Binding SelectedSpecies}" />
+        <!--
+                <comboBox id="PlantPickerAddin_SpeciesOccurrence" caption="All occurrences of:" className="SpeciesOccurrence" itemWidth="100" extendedCaption="Create a layer of plant occurrences by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB1" condition="esri_mapping_mapPane">
+          <tooltip heading="All Occurrances of Species">
+            Select a plant species to add a layer to the map showing all occurrances of that species.<disabledText>A map is required.</disabledText></tooltip>
+        </comboBox>
+        <comboBox id="PlantPickerAddin_SpeciesObservation" caption="Observation types for:" className="SpeciesObservation" itemWidth="100" extendedCaption="Create a layer of plant observations by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB2" condition="esri_mapping_mapPane">
+          <tooltip heading="Observation Types for Species">
+            Select a plant species to add a layer to the map showing the observtion types of that species.<disabledText>A map is required.</disabledText></tooltip>
+        </comboBox>
+        <comboBox id="PlantPickerAddin_SpeciesCoverage" caption="Est. Abundance of:" className="SpeciesCoverage" itemWidth="100" extendedCaption="Create a layer of plant coverage by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB3" condition="esri_mapping_mapPane">
+          <tooltip heading="Estimated Abundance of Species">
+            Select a plant species to add a layer to the map showing the estimated abundance of that species.<disabledText>A map is required.</disabledText></tooltip>
+        </comboBox>
+        <comboBox id="PlantPickerAddin_SpeciesRank" caption="State rank of:" className="SpeciesRank" itemWidth="85" extendedCaption="Create a layer of plant species with the selected state rank" isEditable="false" isReadOnly="true" resizable="true" keytip="CB4" condition="esri_mapping_mapPane">
+          <tooltip heading="Occurrences with State Rank">
+            Select a state rank to add a layer to the map showing all occurrances with that rank.<disabledText>A map is required.</disabledText></tooltip>
+        </comboBox>
+
+        -->
+    </Grid>
+</UserControl>

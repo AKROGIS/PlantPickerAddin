@@ -14,33 +14,20 @@
     <insertModule id="PlantPickerAddin_Module" className="PlantPickerModule" autoLoad="false" caption="PlantPickerModule">
       <groups>
         <group id="PlantPickerAddin_Group1" caption="Denali Plant Picker" smallImage="Images\Plant16.png" appearsOnAddInTab="true" keytip="G1">
-          <comboBox refID="PlantPickerAddin_SpeciesOccurrence" />
-          <comboBox refID="PlantPickerAddin_SpeciesObservation" />
-          <comboBox refID="PlantPickerAddin_SpeciesCoverage" />
-          <comboBox refID="PlantPickerAddin_SpeciesRank" />
+          <button refID="PlantPickerAddin_PlantPickerDockpane_ShowButton" size="large"/>
         </group>
       </groups>
       <controls>
-        <comboBox id="PlantPickerAddin_SpeciesOccurrence" caption="All occurrences of:" className="SpeciesOccurrence" itemWidth="100" extendedCaption="Create a layer of plant occurrences by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB1" condition="esri_mapping_mapPane">
-          <tooltip heading="All Occurrances of Species">
-            Select a plant species to add a layer to the map showing all occurrances of that species.<disabledText>A map is required.</disabledText>
+        <button id="PlantPickerAddin_PlantPickerDockpane_ShowButton" caption="Denali Plant Picker" className="PlantPickerDockpane_ShowButton" loadOnClick="true" smallImage="Images\Plant16.png" largeImage="Images\Plant32.png" keytip="DPP" condition="esri_mapping_mapPane">
+          <tooltip heading="Show Dockpane">Show the plant species selectors<disabledText>A map is required.</disabledText>
         </tooltip>
-        </comboBox>
-        <comboBox id="PlantPickerAddin_SpeciesObservation" caption="Observation types for:" className="SpeciesObservation" itemWidth="100" extendedCaption="Create a layer of plant observations by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB2" condition="esri_mapping_mapPane">
-          <tooltip heading="Observation Types for Species">
-            Select a plant species to add a layer to the map showing the observtion types of that species.<disabledText>A map is required.</disabledText>
-        </tooltip>
-        </comboBox>
-        <comboBox id="PlantPickerAddin_SpeciesCoverage" caption="Est. Abundance of:" className="SpeciesCoverage" itemWidth="100" extendedCaption="Create a layer of plant coverage by selecting the species name" isEditable="false" isReadOnly="true" resizable="true" keytip="CB3" condition="esri_mapping_mapPane">
-          <tooltip heading="Estimated Abundance of Species">
-            Select a plant species to add a layer to the map showing the estimated abundance of that species.<disabledText>A map is required.</disabledText>
-        </tooltip>
-        </comboBox>
-        <comboBox id="PlantPickerAddin_SpeciesRank" caption="State rank of:" className="SpeciesRank" itemWidth="85" extendedCaption="Create a layer of plant species with the selected state rank" isEditable="false" isReadOnly="true" resizable="true" keytip="CB4" condition="esri_mapping_mapPane">
-          <tooltip heading="Occurrences with State Rank">
-            Select a state rank to add a layer to the map showing all occurrances with that rank.<disabledText>A map is required.</disabledText></tooltip>
-        </comboBox>        
+        </button>
       </controls>
+      <dockPanes>
+        <dockPane id="PlantPickerAddin_PlantPickerDockpane" caption="Denali Plant Picker" className="PlantPickerDockpaneViewModel" dock="group" dockWith="esri_core_projectDockPane">
+          <content className="PlantPickerDockpaneView" />
+        </dockPane>
+      </dockPanes>
     </insertModule>
   </modules>
 </ArcGIS>
