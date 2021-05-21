@@ -12,8 +12,8 @@ namespace PlantPickerAddin
     /// </summary>
     internal class PlantPickerModule : Module
     {
-        private static readonly string _folder = @"C:\tmp\AddinTesting\PlantPicker\Plants";
-        //private static readonly string _folder = @"X:\AKR\DENA\biologic\Plants";
+        //private static readonly string _folder = @"C:\tmp\AddinTesting\PlantPicker\Plants";
+        private static readonly string _folder = @"X:\AKR\DENA\biologic\Plants";
         private static readonly string _fgdb = @"Plants.gdb";
         private static PlantPickerModule _this = null;
 

@@ -1,5 +1,5 @@
 ﻿<ArcGIS defaultAssembly="PlantPickerAddin.dll" defaultNamespace="PlantPickerAddin" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{2e61b774-7d2f-42a0-b80a-7a56adc42be4}" version="1.0" desktopVersion="2.7.26828">
+  <AddInInfo id="{2e61b774-7d2f-42a0-b80a-7a56adc42be4}" version="1.0" desktopVersion="2.5">
     <Name>Denali Plant Picker</Name>
     <Description>Generates layers for selected plant species from the Denali plant observation database</Description>
     <Image>Images\Plant32.png</Image>
@@ -39,7 +39,7 @@
         <comboBox id="PlantPickerAddin_SpeciesRank" caption="State rank of:" className="SpeciesRank" itemWidth="85" extendedCaption="Create a layer of plant species with the selected state rank" isEditable="false" isReadOnly="true" resizable="true" keytip="CB4" condition="esri_mapping_mapPane">
           <tooltip heading="Occurrences with State Rank">
             Select a state rank to add a layer to the map showing all occurrances with that rank.<disabledText>A map is required.</disabledText></tooltip>
-        </comboBox>        
+        </comboBox>
       </controls>
     </insertModule>
   </modules>
